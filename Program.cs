@@ -52,33 +52,33 @@ for (int i = 0; i < wordSize; i++)
     }
 }
 
-static int probabillityCheck(int nonwordCount)
+static int probabillityCheck(char[] alphabet,int nonletterCount)
 {
     int probability = 0;
 
-    probability =  Convert.ToInt32(Math.Pow(26, nonwordCount));
+    probability =  Convert.ToInt32(Math.Pow(alphabet.Count(), nonletterCount));
 
     return probability;
 }
 
-string[] possibleWords = new string[probabillityCheck(nonletterCount)];
+string[] possibleWords = new string[probabillityCheck(alphabet ,nonletterCount)];
 
-for (int i = 0; i < probabillityCheck(nonletterCount); i++)
+for (int i = 0; i < probabillityCheck(alphabet, nonletterCount); i++)
 {
     possibleWords[i] = new string(word);
 }
 
-static string[] OneStar(char[] word, string[] possibleWords, char[] alphabet)
+static string[] OneStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
 {
     int index;
 
-        for (int i = 0; i < 26; i++)
+        for (int i = 0; i < probabillityCheck(alphabet, nonletterCount); i++)
         {
             word = possibleWords[i].ToCharArray();
 
             index = Array.IndexOf(word, '*');
 
-            word[index] = alphabet[i];
+            word[index] = alphabet[i % alphabet.Count()];
 
             possibleWords[i] = new string(word);
         }
@@ -86,258 +86,118 @@ static string[] OneStar(char[] word, string[] possibleWords, char[] alphabet)
     return possibleWords;
 }
 
-static string[] TwoStar(char[] word, string[] possibleWords, char[] alphabet)
+static string[] TwoStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
 {
     int index, startPosition;
 
-    for (int i = 0; i < 26; i++)
+    for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 1); i++)
     {
-        for (int j = 0; j < 26; j++)
+        for (int j = 0; j < alphabet.Count(); j++)
         {
-            startPosition = (26 * i) + j;
+            startPosition = (alphabet.Count() * i) + j;
 
             word = possibleWords[startPosition].ToCharArray();
 
             index = Array.IndexOf(word, '*');
 
-            word[index] = alphabet[i];
+            word[index] = alphabet[i % alphabet.Count()];
 
             possibleWords[startPosition] = new string(word);
         }
     }
 
-    for (int i = 0; i < 676; i++)
-    {
-        word = possibleWords[i].ToCharArray();
-
-        index = Array.IndexOf(word, '*');
-
-        word[index] = alphabet[i % 26];
-
-        possibleWords[i] = new string(word);
-    }
-
-    return possibleWords;
+    return OneStar(word, possibleWords, alphabet, nonletterCount);
 }
 
-static string[] ThreeStar(char[] word, string[] possibleWords, char[] alphabet)
+static string[] ThreeStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
 {
     int index, startPosition;
 
-    for (int i = 0; i < 26; i++)
+    for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 2); i++)
     {
-        for (int j = 0; j < 676; j++)
+        for (int j = 0; j < Math.Pow(alphabet.Count(), 2); j++)
         {
-            startPosition = (676 * i) + j;
+            startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 2) * i) + j;
 
             word = possibleWords[startPosition].ToCharArray();
 
             index = Array.IndexOf(word, '*');
 
-            word[index] = alphabet[i];
+            word[index] = alphabet[i % alphabet.Count()];
 
             possibleWords[startPosition] = new string(word);
         }
     }
 
-    for (int i = 0; i < 676; i++)
-    {
-        for (int j = 0; j < 26; j++)
-        {
-            startPosition = (26 * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % 26];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    for (int i = 0; i < 17576; i++)
-    {
-        word = possibleWords[i].ToCharArray();
-
-        index = Array.IndexOf(word, '*');
-
-        word[index] = alphabet[i % 26];
-
-        possibleWords[i] = new string(word);
-    }
-
-    return possibleWords;
+    return TwoStar(word, possibleWords, alphabet, nonletterCount);
 }
 
-static string[] FourStar(char[] word, string[] possibleWords, char[] alphabet)
+static string[] FourStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
 {
     int index, startPosition;
 
-    for (int i = 0; i < 26; i++)
+    for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 3); i++)
     {
-        for (int j = 0; j < 17576; j++)
+        for (int j = 0; j < Math.Pow(alphabet.Count(), 3); j++)
         {
-            startPosition = (17576 * i) + j;
+            startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 3) * i) + j;
 
             word = possibleWords[startPosition].ToCharArray();
 
             index = Array.IndexOf(word, '*');
 
-            word[index] = alphabet[i];
+            word[index] = alphabet[i % alphabet.Count()];
 
             possibleWords[startPosition] = new string(word);
         }
     }
 
-    for (int i = 0; i < 676; i++)
-    {
-        for (int j = 0; j < 676; j++)
-        {
-            startPosition = (676 * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % 26];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    for (int i = 0; i < 17576; i++)
-    {
-        for (int j = 0; j < 26; j++)
-        {
-            startPosition = (26 * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % 26];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    for (int i = 0; i < 456976; i++)
-    {
-        word = possibleWords[i].ToCharArray();
-
-        index = Array.IndexOf(word, '*');
-
-        word[index] = alphabet[i % 26];
-
-        possibleWords[i] = new string(word);
-    }
-
-    return possibleWords;
+    return ThreeStar(word, possibleWords, alphabet, nonletterCount);
 }
 
-static string[] FiveStar(char[] word, string[] possibleWords, char[] alphabet)
+static string[] FiveStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
 {
     int index, startPosition;
 
-    for (int i = 0; i < 26; i++)
+    for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 4); i++)
     {
-        for (int j = 0; j < 456976; j++)
+        for (int j = 0; j < Math.Pow(alphabet.Count(), 4); j++)
         {
-            startPosition = (456976 * i) + j;
+            startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 4) * i) + j;
 
             word = possibleWords[startPosition].ToCharArray();
 
             index = Array.IndexOf(word, '*');
 
-            word[index] = alphabet[i];
+            word[index] = alphabet[i % alphabet.Count()];
 
             possibleWords[startPosition] = new string(word);
         }
     }
 
-    for (int i = 0; i < 676; i++)
-    {
-        for (int j = 0; j < 17576; j++)
-        {
-            startPosition = (17576 * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % 26];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    for (int i = 0; i < 17576; i++)
-    {
-        for (int j = 0; j < 676; j++)
-        {
-            startPosition = (676 * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % 26];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    for (int i = 0; i < 456976; i++)
-    {
-        for (int j = 0; j < 26; j++)
-        {
-            startPosition = (26 * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % 26];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    for (int i = 0; i < 11881376; i++)
-    {
-        word = possibleWords[i].ToCharArray();
-
-        index = Array.IndexOf(word, '*');
-
-        word[index] = alphabet[i % 26];
-
-        possibleWords[i] = new string(word);
-    }
-
-    return possibleWords;
+    return FourStar(word, possibleWords, alphabet, nonletterCount);
 }
 
 switch (nonletterCount)
 {
     case 1:
-        OneStar(emptyWord, possibleWords, alphabet);
+        OneStar(emptyWord, possibleWords, alphabet, nonletterCount);
     break;
 
     case 2:
-        TwoStar(emptyWord, possibleWords, alphabet);
+        TwoStar(emptyWord, possibleWords, alphabet, nonletterCount);
     break;
 
     case 3:
-        ThreeStar(emptyWord, possibleWords, alphabet);
+        ThreeStar(emptyWord, possibleWords, alphabet, nonletterCount);
     break;
 
     case 4:
-        FourStar(emptyWord, possibleWords, alphabet);
+        FourStar(emptyWord, possibleWords, alphabet, nonletterCount);
     break;
 
     case 5:
-        FiveStar(emptyWord, possibleWords, alphabet);
+        FiveStar(emptyWord, possibleWords, alphabet, nonletterCount);
     break;
 
     default:
@@ -345,10 +205,10 @@ switch (nonletterCount)
     break;
 }
 
-for (int i = 0; i < probabillityCheck(nonletterCount); i++)
+for (int i = 0; i < probabillityCheck(alphabet, nonletterCount); i++)
 {
     Console.WriteLine(possibleWords[i]);
 }
 
-Console.WriteLine(probabillityCheck(nonletterCount));
+Console.WriteLine(probabillityCheck(alphabet, nonletterCount));
 Console.ReadLine();
