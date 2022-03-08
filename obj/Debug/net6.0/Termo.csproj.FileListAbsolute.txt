@@ -1,0 +1,15 @@
+C:\Programas\Termo\bin\Debug\net6.0\Termo.exe
+C:\Programas\Termo\bin\Debug\net6.0\Termo.deps.json
+C:\Programas\Termo\bin\Debug\net6.0\Termo.runtimeconfig.json
+C:\Programas\Termo\bin\Debug\net6.0\Termo.dll
+C:\Programas\Termo\bin\Debug\net6.0\Termo.pdb
+C:\Programas\Termo\obj\Debug\net6.0\Termo.csproj.AssemblyReference.cache
+C:\Programas\Termo\obj\Debug\net6.0\Termo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Programas\Termo\obj\Debug\net6.0\Termo.AssemblyInfoInputs.cache
+C:\Programas\Termo\obj\Debug\net6.0\Termo.AssemblyInfo.cs
+C:\Programas\Termo\obj\Debug\net6.0\Termo.csproj.CoreCompileInputs.cache
+C:\Programas\Termo\obj\Debug\net6.0\Termo.dll
+C:\Programas\Termo\obj\Debug\net6.0\refint\Termo.dll
+C:\Programas\Termo\obj\Debug\net6.0\Termo.pdb
+C:\Programas\Termo\obj\Debug\net6.0\Termo.genruntimeconfig.cache
+C:\Programas\Termo\obj\Debug\net6.0\ref\Termo.dll
