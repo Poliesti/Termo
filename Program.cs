@@ -2,23 +2,21 @@
 
 using System;
 
-int wordSize = 5, nonletterCount = 0, position, blueLetter, yellowLetter;
+int wordSize = 5, nonletterCount = 0, position, blueletterCount, yellowletterCount;
 
 char letter; 
 
 char[] word = {'*', '*', '*', '*', '*'};
 char[] emptyWord = {'*', '*', '*', '*', '*'};
-char[] wordwithYellow = {'*', '*', '*', '*', '*'};
 char[] yellowLetters = new char[5];
-char[] vogals = {'a', 'e', 'i', 'o', 'u'};
 char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',};
 
 Console.Write("How many letters are blue: ");
-blueLetter = Convert.ToInt32(Console.ReadLine());
+blueletterCount = Convert.ToInt32(Console.ReadLine());
 
-if (blueLetter != 0)
+if (blueletterCount != 0)
 {
-    for (int i = 0; i < blueLetter; i++)
+    for (int i = 0; i < blueletterCount; i++)
     {
         Console.Write("Select the letter: ");
         letter = Convert.ToChar(Console.ReadLine());
@@ -31,11 +29,11 @@ if (blueLetter != 0)
 }
 
 Console.Write("How many letters are yellow: ");
-yellowLetter = Convert.ToInt32(Console.ReadLine());
+yellowletterCount = Convert.ToInt32(Console.ReadLine());
 
-if (yellowLetter != 0)
+if (yellowletterCount != 0)
 {
-    for (int i = 0; i < yellowLetter; i++)
+    for (int i = 0; i < yellowletterCount; i++)
     {
         Console.Write("Select the letter: ");
         letter = Convert.ToChar(Console.ReadLine());
@@ -68,9 +66,13 @@ for (int i = 0; i < probabillityCheck(alphabet, nonletterCount); i++)
     possibleWords[i] = new string(word);
 }
 
-static string[] OneStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
+static string[] BlueFilter(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount, char[] emptyWord)
 {
-    int index;
+    string[] bluefilteredWord = new string[possibleWords.Count()];
+
+    static string[] FourRightLetters(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
+    {
+        int index;
 
         for (int i = 0; i < probabillityCheck(alphabet, nonletterCount); i++)
         {
@@ -83,132 +85,172 @@ static string[] OneStar(char[] word, string[] possibleWords, char[] alphabet, in
             possibleWords[i] = new string(word);
         }
     
-    return possibleWords;
+        return possibleWords;
+    }
+
+    static string[] ThreeRightLetters(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
+    {
+        int index, startPosition;
+
+        for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 1); i++)
+        {
+            for (int j = 0; j < alphabet.Count(); j++)
+            {
+                startPosition = (alphabet.Count() * i) + j;
+
+                word = possibleWords[startPosition].ToCharArray();
+
+                index = Array.IndexOf(word, '*');
+
+                word[index] = alphabet[i % alphabet.Count()];
+
+                possibleWords[startPosition] = new string(word);
+            }
+        }
+
+        return FourRightLetters(word, possibleWords, alphabet, nonletterCount);
+    }
+
+    static string[] TwoRightLetters(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
+    {
+        int index, startPosition;
+
+        for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 2); i++)
+        {
+            for (int j = 0; j < Math.Pow(alphabet.Count(), 2); j++)
+            {
+                startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 2) * i) + j;
+
+                word = possibleWords[startPosition].ToCharArray();
+
+                index = Array.IndexOf(word, '*');
+
+                word[index] = alphabet[i % alphabet.Count()];
+
+                possibleWords[startPosition] = new string(word);
+            }
+        }
+
+        return ThreeRightLetters(word, possibleWords, alphabet, nonletterCount);
+    }
+
+    static string[] OneRightLetter(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
+    {
+        int index, startPosition;
+
+        for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 3); i++)
+        {
+            for (int j = 0; j < Math.Pow(alphabet.Count(), 3); j++)
+            {
+                startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 3) * i) + j;
+
+                word = possibleWords[startPosition].ToCharArray();
+
+                index = Array.IndexOf(word, '*');
+
+                word[index] = alphabet[i % alphabet.Count()];
+
+                possibleWords[startPosition] = new string(word);
+            }
+        }
+
+        return TwoRightLetters(word, possibleWords, alphabet, nonletterCount);
+    }
+
+    static string[] NoRightLetters(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
+    {
+        int index, startPosition;
+
+        for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 4); i++)
+        {
+            for (int j = 0; j < Math.Pow(alphabet.Count(), 4); j++)
+            {
+                startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 4) * i) + j;
+
+                word = possibleWords[startPosition].ToCharArray();
+
+                index = Array.IndexOf(word, '*');
+
+                word[index] = alphabet[i % alphabet.Count()];
+
+                possibleWords[startPosition] = new string(word);
+            }
+        }
+
+        return OneRightLetter(word, possibleWords, alphabet, nonletterCount);
+    }
+
+    switch (nonletterCount)
+    {
+        case 1:
+            bluefilteredWord = FourRightLetters(emptyWord, possibleWords, alphabet, nonletterCount);
+        break;
+
+        case 2:
+            bluefilteredWord = ThreeRightLetters(emptyWord, possibleWords, alphabet, nonletterCount);
+        break;
+
+        case 3:
+            bluefilteredWord = TwoRightLetters(emptyWord, possibleWords, alphabet, nonletterCount);
+        break;
+
+        case 4:
+            bluefilteredWord = OneRightLetter(emptyWord, possibleWords, alphabet, nonletterCount);
+        break;
+
+        case 5:
+            bluefilteredWord = NoRightLetters(emptyWord, possibleWords, alphabet, nonletterCount);
+        break;
+
+        default:
+            Console.WriteLine("Value didn't match earlier.");
+        break;
 }
 
-static string[] TwoStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
+    return bluefilteredWord;
+}
+
+if (blueletterCount < 5)
 {
-    int index, startPosition;
+    possibleWords = BlueFilter(word, possibleWords, alphabet, nonletterCount, emptyWord);
+}
 
-    for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 1); i++)
+if (yellowletterCount != 0)
+{
+    YellowFilter(possibleWords, yellowLetters, yellowletterCount);
+}
+
+static string[] YellowFilter(string[] possibleWords, char[] yellowLetters, int yellowletterCount)
+{
+    string[] yellowfilteredWords = new string[possibleWords.Count()]; 
+
+    int k = 0, l = -1;
+
+    for (int i = 0; i < possibleWords.Count(); i++)
     {
-        for (int j = 0; j < alphabet.Count(); j++)
+        k = 0;
+
+        for (int j = 0; j < yellowLetters.Count(); j++)
         {
-            startPosition = (alphabet.Count() * i) + j;
+           if (possibleWords[i].Contains(yellowLetters[j]))
+            {
+                k++;
+            }
+        }
 
-            word = possibleWords[startPosition].ToCharArray();
+        if (k == yellowletterCount)
+        {
+            l++;
 
-            index = Array.IndexOf(word, '*');
+            yellowfilteredWords[l] = possibleWords[i];
 
-            word[index] = alphabet[i % alphabet.Count()];
-
-            possibleWords[startPosition] = new string(word);
+            Console.WriteLine(yellowfilteredWords[l]);
         }
     }
 
-    return OneStar(word, possibleWords, alphabet, nonletterCount);
-}
-
-static string[] ThreeStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
-{
-    int index, startPosition;
-
-    for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 2); i++)
-    {
-        for (int j = 0; j < Math.Pow(alphabet.Count(), 2); j++)
-        {
-            startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 2) * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % alphabet.Count()];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    return TwoStar(word, possibleWords, alphabet, nonletterCount);
-}
-
-static string[] FourStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
-{
-    int index, startPosition;
-
-    for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 3); i++)
-    {
-        for (int j = 0; j < Math.Pow(alphabet.Count(), 3); j++)
-        {
-            startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 3) * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % alphabet.Count()];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    return ThreeStar(word, possibleWords, alphabet, nonletterCount);
-}
-
-static string[] FiveStar(char[] word, string[] possibleWords, char[] alphabet, int nonletterCount)
-{
-    int index, startPosition;
-
-    for (int i = 0; i < probabillityCheck(alphabet, nonletterCount - 4); i++)
-    {
-        for (int j = 0; j < Math.Pow(alphabet.Count(), 4); j++)
-        {
-            startPosition = Convert.ToInt32(Math.Pow(alphabet.Count(), 4) * i) + j;
-
-            word = possibleWords[startPosition].ToCharArray();
-
-            index = Array.IndexOf(word, '*');
-
-            word[index] = alphabet[i % alphabet.Count()];
-
-            possibleWords[startPosition] = new string(word);
-        }
-    }
-
-    return FourStar(word, possibleWords, alphabet, nonletterCount);
-}
-
-switch (nonletterCount)
-{
-    case 1:
-        OneStar(emptyWord, possibleWords, alphabet, nonletterCount);
-    break;
-
-    case 2:
-        TwoStar(emptyWord, possibleWords, alphabet, nonletterCount);
-    break;
-
-    case 3:
-        ThreeStar(emptyWord, possibleWords, alphabet, nonletterCount);
-    break;
-
-    case 4:
-        FourStar(emptyWord, possibleWords, alphabet, nonletterCount);
-    break;
-
-    case 5:
-        FiveStar(emptyWord, possibleWords, alphabet, nonletterCount);
-    break;
-
-    default:
-        Console.WriteLine("Value didn't match earlier.");
-    break;
-}
-
-for (int i = 0; i < probabillityCheck(alphabet, nonletterCount); i++)
-{
-    Console.WriteLine(possibleWords[i]);
+    return yellowfilteredWords;
 }
 
 Console.WriteLine(probabillityCheck(alphabet, nonletterCount));
 Console.ReadLine();
+
